@@ -1,4 +1,6 @@
 include make/include.mk
 
-$(BUILD_K)/rust_main.o: src/main.rs
-	rustc src/main.rs --emit=obj -C panic=abort --target riscv64gc-unknown-linux-gnu -o $@
+RS_FLAGS = --emit=obj -C panic=abort --target riscv64gc-unknown-linux-gnu
+
+$(BUILD_U)/init.o: $(SRC_U)/init.rs
+	rustc $^ $(RS_FLAGS) -o $@

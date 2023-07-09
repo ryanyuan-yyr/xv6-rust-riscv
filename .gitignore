@@ -1,2 +1,5 @@
-/build
-/info
+/build/kernel/*
+/build/user/*
+/build/mkfs/*
+/info/kernel/*
+/info/user/*

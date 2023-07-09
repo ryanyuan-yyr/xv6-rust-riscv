@@ -70,15 +70,15 @@ ifneq ($(shell $(CC) -dumpspecs 2>/dev/null | grep -e '[^f]nopie'),)
 CFLAGS += -fno-pie -nopie
 endif
 
-$(BUILD_K)/%.o: $(SRC_K)/%.c dir_build
+$(BUILD_K)/%.o: $(SRC_K)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(BUILD_K)/%.o: $(SRC_K)/%.S dir_build
+$(BUILD_K)/%.o: $(SRC_K)/%.S
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 LDFLAGS = -z max-page-size=4096
 
-$(BUILD_U)/initcode: $(SRC_U)/initcode.S dir_build dir_info
+$(BUILD_U)/initcode: $(SRC_U)/initcode.S
 	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I$(SRC) -I$(SRC_K) -c $(SRC_U)/initcode.S -o $(BUILD_U)/initcode.o
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $(BUILD_U)/initcode.out $(BUILD_U)/initcode.o
 	$(OBJCOPY) -S -O binary $(BUILD_U)/initcode.out $(BUILD_U)/initcode
@@ -87,11 +87,11 @@ $(BUILD_U)/initcode: $(SRC_U)/initcode.S dir_build dir_info
 ULIB = $(BUILD_U)/ulib.o $(BUILD_U)/usys.o $(BUILD_U)/printf.o $(BUILD_U)/umalloc.o
 
 _%: %.o $(ULIB)
-	$(LD) $(LDFLAGS) -T $(SRC_U)/user.ld $(BUILD_K)/rust_main.o -o $@ $^
+	$(LD) $(LDFLAGS) -T $(SRC_U)/user.ld -o $@ $^
 	$(OBJDUMP) -S $@ > $(INFO_U)/$(basename $(notdir $*)).asm
 	$(OBJDUMP) -t $@ | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > $(INFO_U)/$(basename $(notdir $*)).sym
 
-$(BUILD_U)/usys.S : $(SRC_U)/usys.pl dir_build
+$(BUILD_U)/usys.S : $(SRC_U)/usys.pl
 	perl $(SRC_U)/usys.pl > $(BUILD_U)/usys.S
 
 $(BUILD_U)/usys.o : $(BUILD_U)/usys.S
@@ -103,10 +103,10 @@ $(BUILD_U)/_forktest: $(BUILD_U)/forktest.o $(ULIB)
 	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $(BUILD_U)/_forktest $(BUILD_U)/forktest.o $(BUILD_U)/ulib.o $(BUILD_U)/usys.o
 	$(OBJDUMP) -S $(BUILD_U)/_forktest > $(INFO_U)/forktest.asm
 
-$(BUILD_U)/%.o: $(SRC_U)/%.c dir_build
+$(BUILD_U)/%.o: $(SRC_U)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(BUILD_FS)/mkfs: $(SRC_FS)/mkfs.c $(SRC_K)/fs.h $(SRC_K)/param.h dir_build
+$(BUILD_FS)/mkfs: $(SRC_FS)/mkfs.c $(SRC_K)/fs.h $(SRC_K)/param.h
 	gcc -Werror -Wall -Isrc -o $(BUILD_FS)/mkfs $(SRC_FS)/mkfs.c
 
 # Prevent deletion of intermediate files, e.g. cat.o, after first build, so
