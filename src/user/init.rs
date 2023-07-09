@@ -2,6 +2,8 @@
 #![no_main]
 
 include!("../include.rs");
+// include!("../../build/kernel/rust_header.rs");
+// include!("../../build/user/rust_header.rs");
 
 extern "C" {
     pub fn open(path: *const u8, flags: i32) -> i32;

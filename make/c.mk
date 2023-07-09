@@ -59,7 +59,7 @@ CFLAGS = -Wall -Werror -O -fno-omit-frame-pointer -ggdb -gdwarf-2
 CFLAGS += -MD
 CFLAGS += -mcmodel=medany
 CFLAGS += -ffreestanding -fno-common -nostdlib -mno-relax
-CFLAGS += -Isrc
+CFLAGS += -I$(INCLUDE)
 CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
 
 # Disable PIE when possible (for Ubuntu 16.10 toolchain)
@@ -71,15 +71,15 @@ CFLAGS += -fno-pie -nopie
 endif
 
 $(BUILD_K)/%.o: $(SRC_K)/%.c
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -I$(INCLUDE_K) -c -o $@ $<
 
 $(BUILD_K)/%.o: $(SRC_K)/%.S
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -I$(INCLUDE_K) -c -o $@ $<
 
 LDFLAGS = -z max-page-size=4096
 
 $(BUILD_U)/initcode: $(SRC_U)/initcode.S
-	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I$(SRC) -I$(SRC_K) -c $(SRC_U)/initcode.S -o $(BUILD_U)/initcode.o
+	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I$(INCLUDE_K) -c $(SRC_U)/initcode.S -o $(BUILD_U)/initcode.o
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $(BUILD_U)/initcode.out $(BUILD_U)/initcode.o
 	$(OBJCOPY) -S -O binary $(BUILD_U)/initcode.out $(BUILD_U)/initcode
 	$(OBJDUMP) -S $(BUILD_U)/initcode.o > $(INFO_U)/initcode.asm
@@ -106,8 +106,8 @@ $(BUILD_U)/_forktest: $(BUILD_U)/forktest.o $(ULIB)
 $(BUILD_U)/%.o: $(SRC_U)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(BUILD_FS)/mkfs: $(SRC_FS)/mkfs.c $(SRC_K)/fs.h $(SRC_K)/param.h
-	gcc -Werror -Wall -Isrc -o $(BUILD_FS)/mkfs $(SRC_FS)/mkfs.c
+$(BUILD_FS)/mkfs: $(SRC_FS)/mkfs.c $(INCLUDE_K)/fs.h $(INCLUDE_K)/param.h
+	gcc -Werror -Wall -I$(INCLUDE) -o $(BUILD_FS)/mkfs $(SRC_FS)/mkfs.c
 
 # Prevent deletion of intermediate files, e.g. cat.o, after first build, so
 # that disk image changes after first build are persistent until clean.  More

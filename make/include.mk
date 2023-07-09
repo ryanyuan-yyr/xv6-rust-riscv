@@ -8,6 +8,10 @@ SRC_K = $(SRC)/kernel
 SRC_U = $(SRC)/user
 SRC_FS = $(SRC)/mkfs
 
+INCLUDE = includes
+INCLUDE_K = $(INCLUDE)/kernel
+INCLUDE_U = $(INCLUDE)/user
+
 INFO = info
 INFO_K = $(INFO)/kernel
 INFO_U = $(INFO)/user

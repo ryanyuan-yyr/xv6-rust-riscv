@@ -9,4 +9,5 @@ $(BUILD_K)/kernel: $(OBJS) $(SRC_K)/kernel.ld $(BUILD_U)/initcode
 
 clean: 
 	rm -fr $(BUILD_K)/* $(BUILD_U)/* $(BUILD_FS)/* $(INFO_K)/* $(INFO_U)/*
+	cd bindgen && cargo clean
 

@@ -3,3 +3,4 @@
 /build/mkfs/*
 /info/kernel/*
 /info/user/*
+/bindgen/target/*

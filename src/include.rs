@@ -3,10 +3,6 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
     loop {}
 }
 
-pub fn _start() -> () {
-    main();
-}
-
 const CONSOLE: i32 = 1;
 const O_RDONLY: i32 = 0x000;
 const O_WRONLY: i32 = 0x001;
