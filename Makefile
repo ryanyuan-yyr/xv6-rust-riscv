@@ -1,5 +1,6 @@
-include rust.mk
-include c.mk
+include make/rust.mk
+include make/c.mk
+include make/qemu.mk
 
 $(BUILD_K)/kernel: $(OBJS) $(SRC_K)/kernel.ld $(BUILD_U)/initcode $(BUILD_K)/rust_main.o
 	$(LD) $(LDFLAGS) -T $(SRC_K)/kernel.ld -o $(BUILD_K)/kernel $(OBJS) $(BUILD_K)/rust_main.o
@@ -9,4 +10,3 @@ $(BUILD_K)/kernel: $(OBJS) $(SRC_K)/kernel.ld $(BUILD_U)/initcode $(BUILD_K)/rus
 clean: 
 	rm -fr $(BUILD) $(INFO)
 
-include qemu.mk

@@ -1,4 +1,4 @@
-include include.mk
+include make/include.mk
 
 OBJS = \
   $(BUILD_K)/entry.o \
