@@ -24,10 +24,15 @@ KERNEL_INCLUDES = \
 # 	user.h\
 
 build/kernel/rust_header.rs: 
-	cd bindgen && cargo run --release -- $(KERNEL_INCLUDES:%=../$(INCLUDE_K)/%) ../$@
+	cd bindgen && ./target/release/bindgen $(KERNEL_INCLUDES:%=../$(INCLUDE_K)/%) ../$@
+# cd bindgen && cargo run --release -- $(KERNEL_INCLUDES:%=../$(INCLUDE_K)/%) ../$@
 
 # build/user/rust_header.rs:
 # 	cd bindgen && cargo run --release -- $(USER_INCLUDES:%=../$(INCLUDE_U)/%) ../$@
 
 $(BUILD_U)/init.o: $(SRC_U)/init.rs
 	rustc $(SRC_U)/init.rs $(RS_FLAGS) -o $@
+
+$(BUILD_K)/kernel_rs.o: $(SRC_K)/*.rs build/kernel/rust_header.rs
+	rustc $(SRC_K)/kernel.rs $(RS_FLAGS) -o $@
+

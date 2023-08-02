@@ -4,6 +4,12 @@
         "*.svg": "svg",
         "*.yuml": "yuml",
         "buf.h": "c",
-        "syscall.h": "c"
+        "syscall.h": "c",
+        "condition_variable": "c",
+        "*.tcc": "c",
+        "fstream": "c",
+        "mutex": "c",
+        "ostream": "c",
+        "stop_token": "c"
     }
 }
